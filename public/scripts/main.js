@@ -28,5 +28,6 @@ rh.ClassName = class {
 
 /* Main */
 $(document).ready(() => {
-    console.log("Ready");
+	console.log("Ready");
+	
 });

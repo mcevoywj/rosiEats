@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="styles/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="styles/main.css">
+    <title>RosiEats</title>
+</head>
+
+<body>
+    <nav class="navbar fixed-top">
+        <div class="btn-group">
+            <span data-toggle="dropdown">
+                <i class="material-icons">menu</i>
+            </span>
+            <div class="dropdown-menu dropdown-menu-left" data-target="#navDrawer">
+
+            </div>
+        </div>
+        <div class="col">
+            <a class="navbar-brand" href="/">Rose Gardens</a>
+        </div>
+        <div class="btn-group">
+            <span data-target="#shoppingcart">
+                <img id="cart" src="images/cart.png" alt="shopping cart">
+            </span>
+        </div>
+    </nav>
+
+    <div id="rg-page" class="container page-container">
+        <div class="row">
+            <img id="favorites" src="images/favorites.png" alt="favorites">
+            Favorites
+        </div>
+        <hr>
+        <div id="items" class="row">
+            <div class="icon col">
+                <img src="images/baja_bowl.png" alt="Baja Bowl">
+                <h6>Baja Bowl</h6>
+            </div>
+            <div class="icon col">
+                <img src="images/gobbler.png" alt="The Gobbler">
+                <h6>The Gobbler</h6>
+            </div>
+            <div class="icon col">
+                <img src="images/tomato_basil.png" alt="Tomato Basil Soup">
+                <h6>Tomato Basil Soup</h6>
+            </div>
+        </div>
+        <!-- <hr> -->
+        <div class="row">
+            <img id="specials" src="images/weekly_specials.png" alt="specials">
+            Weekly Specials
+        </div>
+        <hr>
+        <div id="items" class="row">
+            <div class="icon col">
+                <img src="images/texan.png" alt="The Texan">
+                <h6>The Texan</h6>
+            </div>
+            <div class="icon col">
+                <img src="images/broccoli_cheddar.png" alt="Broccoli Cheddar Soup">
+                <h6>Broccoli Cheddar Soup</h6>
+            </div>
+            <div class=" col">
+
+            </div>
+        </div>
+        <div class="row">
+            <img id="daily" src="images/daily.png" alt="daily menu">
+            Daily Menu
+        </div>
+        <hr>
+        <div id="items" class="row">
+            Insert Menu Items Here
+        </div>
+
+    </div>
+
+    <script src="scripts/jquery.min.js"></script>
+    <script src="scripts/popper.min.js"></script>
+    <script src="scripts/bootstrap.min.js"></script>
+    <script src="/__/firebase/6.3.5/firebase-app.js"></script>
+    <script src="/__/firebase/6.3.5/firebase-firestore.js"></script>
+    <script src="/__/firebase/init.js"></script>
+    <script src="scripts/main.js"></script>
+</body>
+
+</html>

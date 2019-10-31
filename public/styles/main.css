@@ -10,3 +10,123 @@ body {
 .page-container {
     margin-top: 50px;
 }
+
+/* Login Page */
+#login-page {
+    margin-top: 40px;
+}
+
+#roselogo-container {
+    width: 184px;
+    padding-top: 15px;
+}
+
+.title {
+    font-weight: 500;
+    text-align: center;
+    margin: 30px;
+}
+
+#rosefire-button-container {
+    width: 200px;
+}
+
+#rosefire-button {
+    background-color: #800000;
+    width: 200px;
+}
+
+#rosefire-button:active {
+    transform: translateY(4px);
+    opacity: 0.8;
+}
+
+.fab {
+    position: absolute;
+    bottom: 4px;
+    right: 0px;
+    z-index: 999;
+}
+
+.fab:active {
+    transform: translateY(4px);
+    opacity: 0.8;
+}
+
+/* Main Page */
+
+.icon {
+    background: white;
+    text-align: center;
+}
+
+#main-page, 
+#chaunceys-page,
+#union-page,
+#rg-page,
+#beanies-page,
+#mc-page {
+    margin-top: 75px;
+}
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}
+
+@media (min-width: 350px) {
+    .icon{
+        margin: 5px;
+        padding: 5px;
+    } 
+    .icon img {
+        width: 75%;
+        height: 60%;
+    }   
+}
+@media (min-width: 750px){
+    .icon {
+
+    }
+    .icon img {
+        width: 75%;
+        height: 90%;
+    }
+}
+
+.navbar-brand {
+    color: white;
+}
+
+/* .bmd-layout-container {
+    custom-size: 500px;
+    @include bmd-drawer-x-out($custom-size);
+    &:not(.bmd-drawer-out) {
+      @each $breakpoint in map-keys($grid-breakpoints) {
+        @include bmd-drawer-x-in-up($custom-size, $breakpoint);
+      }
+    }
+  } */
+
+  /* Option Pages */
+  #items {
+      margin-bottom: 10px;
+  }
+  #favorites {
+      height: 20px;
+      margin: 2px;
+  }
+  #specials {
+    height: 25px;
+    margin: 2px;
+  }
+  #daily {
+    height: 20px;
+    margin: 3px;
+  }
+  #cart {
+      height: 25px;
+  }
