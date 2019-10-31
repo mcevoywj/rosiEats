@@ -65,7 +65,8 @@ body {
 #union-page,
 #rg-page,
 #beanies-page,
-#mc-page {
+#mc-page,
+#settings-page {
     margin-top: 75px;
 }
 
@@ -88,9 +89,9 @@ body {
     }   
 }
 @media (min-width: 750px){
-    .icon {
+    /* .icon {
 
-    }
+    } */
     .icon img {
         width: 75%;
         height: 90%;
@@ -130,3 +131,20 @@ body {
   #cart {
       height: 25px;
   }
+
+  /* Settings Page */
+  .btn-outline-danger:hover{
+      background-color: #800000;
+      border-color: #800000;
+  }
+  .btn-outline-danger {
+      color: #800000;
+      border-color: #800000;
+  }
+  #profile {
+      height: 75%;
+  }
+  #profileCard {
+      width: 75%;
+  }
+

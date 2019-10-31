@@ -21,7 +21,7 @@
             </div>
         </div>
         <div class="col">
-            <a class="navbar-brand" href="/">Moench Cafe</a>
+            <a class="navbar-brand" href="/">RosiEats</a>
         </div>
         <div class="btn-group">
             <span data-target="#shoppingcart">
@@ -30,36 +30,34 @@
         </div>
     </nav>
 
-    <div id="mc-page" class="container page-container">
+    <div id="settings-page" class="container page-container">
+        <div class="row justify-content-center">
+            <div id="profileCard" class="card text-center">
+                <div class="card-header">
+                    Profile
+                </div>
+                <div class="card-body">
+                    <img id="profile" src="images/profile_sally.png" alt="Hi, I'm Sally">
+                    <h5 class="card-title">Maria Schaefer</h5>
+                    <!-- <p class="card-text">schaefmk@rose-hulman.edu</p> -->
+                    <p class="card-text">Meals : XX</p>
+                    <p class="card-text">DB : $XX.XX</p>
+                </div>
+                <div class="card-footer">
+                    <button id="logOut" class="btn btn-outline-danger">LOG OUT</button>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <img id="cart" src="images/past_cart.png" alt="past purchases">
+            Past Purchases:
+        </div>
+        <hr>
         <div class="row">
             <img id="favorites" src="images/favorites.png" alt="favorites">
-            Favorites
+            Favorite Items:
         </div>
-        <hr>
-        <div id="items" class="row">
-            <div class="icon col">
-                <img src="images/coffee.png" alt="Coffee">
-                <h6>Coffee</h6>
-            </div>
-            <div class="icon col">
-                <img src="images/banana.png" alt="Banana">
-                <h6>Banana</h6>
-            </div>
-            <div class="icon col">
-                <img src="images/cold_brew.png" alt="Cold Brew">
-                <h6>Cold Brew</h6>
-            </div>
-        </div>
-        
-        <div class="row">
-            <img id="daily" src="images/daily_menu.png" alt="daily menu">
-            Daily Menu
-        </div>
-        <hr>
-        <div id="items" class="row">
-            Insert Menu Items Here
-        </div>
-
     </div>
 
     <script src="scripts/jquery.min.js"></script>
