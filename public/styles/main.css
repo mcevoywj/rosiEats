@@ -53,6 +53,11 @@ body {
     opacity: 0.8;
 }
 
+#emailPassword .row {
+    height: 50px;
+    width: 50px;
+}
+
 /* Main Page */
 
 .icon {
@@ -78,25 +83,25 @@ body {
     float: right;
 }
 
-@media (min-width: 350px) {
+/* @media (max-width: 950px) { */
     .icon{
         margin: 5px;
         padding: 5px;
     } 
     .icon img {
-        width: 75%;
-        height: 60%;
+        width: 75px;
+        height: 75px;
     }   
-}
-@media (min-width: 750px){
-    /* .icon {
+/* } */
+/* @media (min-width: 750px){
+    .icon {
 
-    } */
+    }
     .icon img {
         width: 75%;
         height: 90%;
     }
-}
+} */
 
 .navbar-brand {
     color: white;
