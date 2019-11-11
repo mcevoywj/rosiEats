@@ -11,21 +11,40 @@
 </head>
 
 <body>
-    <nav class="navbar fixed-top">
+    <!-- <nav class="navbar fixed-top">
         <div class="btn-group">
             <span data-toggle="dropdown">
                 <i class="material-icons">menu</i>
             </span>
             <div class="dropdown-menu dropdown-menu-left" data-target="#navDrawer">
-    <!-- <button class="dropdown-item" type="button" data-target="#editQuoteDialog"
-                data-toggle="modal">Edit</button>
-                <button class="dropdown-item" type="button" data-target="#deleteQuoteDialog"
-                data-toggle="modal">Delete</button> -->
-
     </div>
         </div>
         <div class="col">
             <a class="navbar-brand" href="/">RosiEats</a>
+        </div>
+    </nav> -->
+    <nav class="navbar navbar-dark fixed-top">
+        <span data-toggle="dropdown">
+            <i class="material-icons">menu</i>
+        </span>
+        <div class="dropdown-menu dropdown-menu-left">
+            <button id="menuUnionCafe" class="dropdown-item" type="button">Union Cafe</button>
+            <button id="menuChaunceys" class="dropdown-item" type="button">Chauncey's</button>
+            <button id="menuRoseGardens" class="dropdown-item" type="button">Rose Gardens</button>
+            <button id="menuBeanies" class="dropdown-item" type="button">Beanies</button>
+            <button id="menuMoenchCafe" class="dropdown-item" type="button">Moench Cafe</button>
+            <button id="menuSignOut" class="dropdown-item" type="button">Sign out</button>
+        </div>
+        <div class="col">
+            <a class="navbar-brand" href="#">RosiEats</a>
+        </div>
+        <div class="btn-group">
+            <span data-toggle="shoppingCart">
+                <img id="#cart" src="images/cart.png" alt="shopping cart" style="height: 25px;">
+            </span>
+            <!-- <span data-toggle="dropdown">
+                <i class="material-icons">menu</i>
+            </span> -->
         </div>
     </nav>
 
@@ -86,6 +105,7 @@
     <script src="scripts/popper.min.js"></script>
     <script src="scripts/bootstrap.min.js"></script>
     <script src="/__/firebase/6.3.5/firebase-app.js"></script>
+    <script src="/__/firebase/6.3.5/firebase-auth.js"></script>
     <script src="/__/firebase/6.3.5/firebase-firestore.js"></script>
     <script src="/__/firebase/init.js"></script>
     <script src="scripts/main.js"></script>

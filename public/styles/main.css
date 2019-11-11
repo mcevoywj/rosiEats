@@ -137,6 +137,10 @@ body {
       height: 25px;
   }
 
+  #drawer button i {
+      color: white;
+  }
+
   /* Settings Page */
   .btn-outline-danger:hover{
       background-color: #800000;
@@ -151,5 +155,10 @@ body {
   }
   #profileCard {
       width: 75%;
+  }
+
+  #shoppingCart {
+      height: 20px;
+      width: 20px;
   }
 
