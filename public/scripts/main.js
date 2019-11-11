@@ -19,15 +19,26 @@ rh.KEY_DB = 0;
 rh.KEY_USERNAME = "username";
 rh.KEY_GROUP = "group";
 
+rh.COLLECTION_CHAUNCEY_ITEMS = "Chaunceys";
+rh.KEY_ITEM_NAME = "item name";
+rh.KEY_ITEM_IMAGE_URL = "imageUrl";
+rh.KEY_INGREDIENTS = "ingredients";
+rh.KEY_CALORIES = 0;
+rh.KEY_SHORT = "short";
+rh.KEY_MENU_TYPE = "menuType";
+rh.KEY_LAST_TOUCHED = "lastTouched";
+
+
 
 
 rh.fbOrderManager = null;
 rh.fbUserManager = null;
 rh.fbItemManager = null;
 rh.fbAuthManager = null;
+rh.fbChaunceyManager = null;
 
-rh.Order = class{
-	constructor(id, item, price, quantity){
+rh.Order = class {
+	constructor(id, item, price, quantity) {
 		this.id = id;
 		this.item = item;
 		this.price = price;
@@ -36,7 +47,7 @@ rh.Order = class{
 }
 
 rh.Item = class {
-	constructor(id, name, image, ingredients){
+	constructor(id, name, image, ingredients) {
 		this.id = id;
 		this.name = name;
 		this.image = image;
@@ -71,7 +82,7 @@ rh.FbAuthManager = class {
 	}
 
 	get group() {
-		if(this._user){
+		if (this._user) {
 			return this._user.group;
 		}
 		console.log("This user has no group!");
@@ -162,7 +173,7 @@ rh.FbUserManager = class {
 		// Check to see if User already exists
 		const userRef = this._collectionRef.doc(rfUser.username);
 		return userRef.get().then((document) => {
-			if(document.exist) {
+			if (document.exist) {
 				// This user already exists. This is a second login. Do nothing.
 				return;
 			} else {
@@ -179,15 +190,15 @@ rh.FbUserManager = class {
 
 	updateName(name) {
 		const userRef = this._collectionRef.doc(rh.fbAuthManager.uid);
-		userRef.update ({
-			[rh.KEY_NAME] : name
+		userRef.update({
+			[rh.KEY_NAME]: name
 		});
 	}
 
 	updatePhotoUrl(photoUrl) {
 		const userRef = this._collectionRef.doc(rh.fbAuthManager.uid);
-		userRef.update ({
-			[rh.KEY_PHOTO_URL] : photoUrl
+		userRef.update({
+			[rh.KEY_PHOTO_URL]: photoUrl
 		});
 
 	}
@@ -213,10 +224,6 @@ rh.FbUserManager = class {
 rh.LogInPageController = class {
 	/** constructor */
 	constructor() {
-		// $("#rosefire-button").click((event) => {
-		// 	console.log("You have clicked Log In");
-		// 	window.location.href = `/main.html`;
-		// });
 		$("#rosefire-button").click((event) => {
 			rh.fbAuthManager.signIn().then(() => {
 				console.log("Move to next page because of promise");
@@ -231,7 +238,105 @@ rh.LogInPageController = class {
 rh.MainPageController = class {
 	/** constructor */
 	constructor(userId) {
-		$("#union-cafe").click(function() {
+		$("#union-cafe").click(function () {
+			console.log("You have clicked Union Cafe");
+			window.location.href = `/union-cafe.html?uid=${rh.fbAuthManager.uid}`;
+			return false;
+		});
+		$("#rose-gardens").click((event) => {
+			console.log("You have clicked Union Cafe");
+			window.location.href = `/rose-gardens.html?uid=${rh.fbAuthManager.uid}`;
+		});
+		$("#moench-cafe").click((event) => {
+			console.log("You have clicked Union Cafe");
+			window.location.href = `/moench-cafe.html?uid=${rh.fbAuthManager.uid}`;
+		});
+		$("#chaunceys").click((event) => {
+			console.log("You have clicked Union Cafe");
+			window.location.href = `/chaunceys.html?uid=${rh.fbAuthManager.uid}`;
+		});
+		$("#beanies").click((event) => {
+			console.log("You have clicked Union Cafe");
+			window.location.href = `/beanies.html?uid=${rh.fbAuthManager.uid}`;
+		});
+		$("#settings").click((event) => {
+			console.log("You have clicked Union Cafe");
+			window.location.href = `/settings.html?uid=${rh.fbAuthManager.uid}`;
+		});
+		//Dropdown Menu Actions
+		$("#menuSignOut").click((event) => {
+			console.log("Sign out.");
+			rh.fbAuthManager.signOut();
+		});
+		// this.isStudent(rh.fbUserManager.group);
+		// this.isStudent(rh.fbUserManager.rfUser.group);
+		// console.log(rh.fbUserManager.group);
+		this.isStudent(rh.KEY_GROUP);
+		console.log("meals: ", rh.KEY_MEALS);
+
+	}
+	isStudent(userGroup) {
+		console.log(userGroup);
+		if (userGroup == "STUDENT") {
+			[rh.KEY_MEALS] = 120;
+			rh.KEY_DB = 60;
+			return;
+		}
+		rh.KEY_MEALS = 90;
+		rh.KEY_DB = 45;
+		return;
+	}
+}
+
+rh.RestuarantPageController = class {
+	/** constructor */
+	constructor() {
+
+	}
+	methodName() {
+
+	}
+}
+
+rh.FbChaunceyManager = class {
+	constructor(uid) {
+		this._collectionRef = firebase.firestore().collection(rh.COLLECTION_CHAUNCEY_ITEMS);
+		this._documentSnapshots = [];
+		this._unsubscribe = null;
+		this._uid = uid;
+		console.log(uid);
+	}
+
+	beginListening(changeListener) {
+		console.log("Listenign for menu items");
+		let query = this._collectionRef.orderBy(rh.KEY_LAST_TOUCHED, "desc").limit(3);
+		if(this._uid) {
+			query = query.where(rh.KEY_UID, "==", this._uid);
+		}
+		this._unsubscribe = query.onSnapshot((querySnapshot) => {
+			this._documentSnapshots = querySnapshot.docs;
+			console.log("Update " + this._documentSnapshots.length + "menu items");
+			if(changeListener) {
+				changeListener();
+			}
+		})
+	}
+	stopListening() {
+		this._unsubscribe();
+	}
+
+	addToOrder() {
+		console.log("Added to Order!");
+	}
+}
+
+
+rh.ChaunceysPageController = class {
+	/** constructor */
+	constructor() {
+		rh.fbChaunceyManager.beginListening(this.updateView.bind(this));
+
+		$("#union-cafe").click(function () {
 			console.log("You have clicked Union Cafe");
 			window.location.href = `/union-cafe.html`;
 			return false;
@@ -256,56 +361,43 @@ rh.MainPageController = class {
 			console.log("You have clicked Union Cafe");
 			window.location.href = "/settings.html";
 		});
-		//Dropdown Menu Actions
+		$("#addToOrder").click((event) => {
+			console.log("Added to Order!");
+		});
 		$("#menuSignOut").click((event) => {
 			console.log("Sign out.");
 			rh.fbAuthManager.signOut();
 		});
-		// this.isStudent(rh.fbUserManager.group);
-		// this.isStudent(rh.fbUserManager.rfUser.group);
-		// console.log(rh.fbUserManager.group);
-		this.isStudent(rh.KEY_GROUP);
-		console.log("meals: ", rh.KEY_MEALS);
+
 
 	}
-	isStudent(userGroup) {
-		console.log(userGroup);
-		if(userGroup == "STUDENT"){
-			[rh.KEY_MEALS] = 120;
-			rh.KEY_DB = 60;
-			return;
-		} 
-		rh.KEY_MEALS = 90;
-		rh.KEY_DB = 45;
-		return;
+	updateView() {
+		$("#items").removeAttr("id").hide();
+		let $newMenu = $("<div></div>").attr("id", "items");
+
+		for (let k = 0; k < rh.fbChaunceyManager.length; k++) {
+			const $newItem = this.createMenuItem(
+				rh.fbChaunceyManager.getMennuItemAtIndex(k)
+			);
+			$newMenu.append($newItem);
+		}
+		$("#chauncey-page").append($newMenu);
 	}
-}
-
-rh.ChaunceysPageController = class {
-	/** constructor */
-	constructor() {
-
-	}
-	methodName() {
-
-	}
-}
-
-rh.UnionPageController = class {
-	/** constructor */
-	constructor() {
+	createMenuItem(menuItem) {
+		const $newItem = $(
+			`<div class="icon col" >
+				<img src="${menuItem.imageUrl}" alt="${menuItem.name}">
+				<h6>${menuItem.name}</h6>
+			</div>`
+		);
 		
-
-	}
-	methodName() {
-
 	}
 }
 
 rh.checkForRedirects = function () {
 	// Redirects
 	if ($("#login-page").length && rh.fbAuthManager.isSignIn && !rh.fbAuthManager.rfUser) {
-		window.location.href = "/main.html";
+		window.location.href = `/main.html`;
 	}
 	if (!$("#login-page").length && !rh.fbAuthManager.isSignIn) {
 		window.location.href = "/";
@@ -314,28 +406,31 @@ rh.checkForRedirects = function () {
 
 rh.initializePage = function () {
 	var urlParams = new URLSearchParams(window.location.search);
-	if($("#login-page").length){
+	if ($("#login-page").length) {
 		console.log("On the login page.");
 		new rh.LogInPageController();
-	} else if($("#main-page").length){
+	} else if ($("#main-page").length) {
 		console.log("On the main menu page.");
+		const urlUid = urlParams.get('uid');
 		new rh.MainPageController();
-	} else if($("#chaunceys-page").length){
+	} else if ($("#chaunceys-page").length) {
 		console.log("On Chauncey's page");
+		const urlUid = urlParams.get('uid');
+		rh.fbChaunceyManager = new rh.FbChaunceyManager(urlUid);
 		new rh.ChaunceysPageController();
-	} else if($("#union-page").length){
+	} else if ($("#union-page").length) {
 		console.log("On Union Cafe page");
 		new rh.UnionPageController();
-	} else if($("#rg-page").length){
+	} else if ($("#rg-page").length) {
 		console.log("On Rose Gardens page");
 		new rh.RGPageController();
-	} else if($("#mc-page").length){
+	} else if ($("#mc-page").length) {
 		console.log("On Moench Cafe page");
 		new rh.MCPageController();
-	} else if($("#beanies-page").length){
+	} else if ($("#beanies-page").length) {
 		console.log("On Beanies page");
 		new rh.BeaniesPageController();
-	} else if($("#settings-page").length){
+	} else if ($("#settings-page").length) {
 		console.log("On Settings page");
 		new rh.SettingsPageController();
 	}
@@ -353,5 +448,5 @@ $(document).ready(() => {
 		console.log("Auth state changed. isSignedIn = ", rh.fbAuthManager.isSignIn);
 		rh.checkForRedirects();
 		rh.initializePage();
-	});	
+	});
 });

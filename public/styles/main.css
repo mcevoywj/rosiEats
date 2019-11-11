@@ -83,10 +83,27 @@ body {
     float: right;
 }
 
+.modal-icon {
+    max-width: 100px;
+    margin: 5px;
+    padding: 5px;
+}
+
+.modal-icon img {
+    width: 75px;
+    height: 75px;
+}
+
+.modal-box {
+    margin: 10px;
+    padding: 10px;
+}
+
 /* @media (max-width: 950px) { */
     .icon{
         margin: 5px;
         padding: 5px;
+        /* max-width: 100px; */
     } 
     .icon img {
         width: 75px;
@@ -160,5 +177,9 @@ body {
   #shoppingCart {
       height: 20px;
       width: 20px;
+  }
+
+  .btn {
+      color: #800000;
   }
 
