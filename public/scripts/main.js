@@ -47,11 +47,13 @@ rh.Order = class {
 }
 
 rh.Item = class {
-	constructor(id, name, image, ingredients) {
+	constructor(id, name, image, ingredients, calPer, calories) {
 		this.id = id;
 		this.name = name;
 		this.image = image;
 		this.ingredients = ingredients;
+		this.calPer = calPer;
+		this.calories = calories;
 	}
 }
 
@@ -120,6 +122,10 @@ rh.FbAuthManager = class {
 						rh.KEY_NAME = this.rfUser.name;
 						rh.KEY_USERNAME = this.rfUser.username;
 						// console.log(rh.KEY_GROUP);
+						if(rh.KEY_GROUP == "STUDENT") {
+							rh.KEY_MEALS = 120;
+							rh.KEY_DB = 250;
+						}
 						resolve();
 					})
 
@@ -151,7 +157,8 @@ rh.FbUserManager = class {
 		this._unsubscribe = this._collectionRef.doc(uid).onSnapshot((doc) => {
 			if (doc.exists) {
 				this._document = doc;
-				console.log('doc.data() :', doc.data());
+				rh.KEY_NAME = doc.data().name;
+				rh.KEY_GROUP = doc.data().group;
 				if (changeListener) {
 					changeListener();
 				}
@@ -204,7 +211,7 @@ rh.FbUserManager = class {
 	}
 
 	get name() {
-		return this._document.get(rh.KEY_NAME);
+		return this._document.data();
 	}
 
 	get photoUrl() {
@@ -244,48 +251,32 @@ rh.MainPageController = class {
 			return false;
 		});
 		$("#rose-gardens").click((event) => {
-			console.log("You have clicked Union Cafe");
+			console.log("You have clicked Rose Gardens");
 			window.location.href = `/rose-gardens.html?uid=${rh.fbAuthManager.uid}`;
 		});
 		$("#moench-cafe").click((event) => {
-			console.log("You have clicked Union Cafe");
+			console.log("You have clicked Moench Cafe");
 			window.location.href = `/moench-cafe.html?uid=${rh.fbAuthManager.uid}`;
 		});
 		$("#chaunceys").click((event) => {
-			console.log("You have clicked Union Cafe");
+			console.log("You have clicked Chauncey's");
 			window.location.href = `/chaunceys.html?uid=${rh.fbAuthManager.uid}`;
 		});
 		$("#beanies").click((event) => {
-			console.log("You have clicked Union Cafe");
+			console.log("You have clicked Beanies");
 			window.location.href = `/beanies.html?uid=${rh.fbAuthManager.uid}`;
 		});
 		$("#settings").click((event) => {
-			console.log("You have clicked Union Cafe");
+			console.log("You have clicked Settings");
 			window.location.href = `/settings.html?uid=${rh.fbAuthManager.uid}`;
 		});
-		//Dropdown Menu Actions
-		$("#menuSignOut").click((event) => {
-			console.log("Sign out.");
-			rh.fbAuthManager.signOut();
-		});
-		// this.isStudent(rh.fbUserManager.group);
-		// this.isStudent(rh.fbUserManager.rfUser.group);
-		// console.log(rh.fbUserManager.group);
-		this.isStudent(rh.KEY_GROUP);
-		console.log("meals: ", rh.KEY_MEALS);
-
+		// //Dropdown Menu Actions
+		// $("#menuSignOut").click((event) => {
+		// 	console.log("Sign out.");
+		// 	rh.fbAuthManager.signOut();
+		// });
 	}
-	isStudent(userGroup) {
-		console.log(userGroup);
-		if (userGroup == "STUDENT") {
-			[rh.KEY_MEALS] = 120;
-			rh.KEY_DB = 60;
-			return;
-		}
-		rh.KEY_MEALS = 90;
-		rh.KEY_DB = 45;
-		return;
-	}
+	
 }
 
 rh.RestuarantPageController = class {
@@ -298,17 +289,56 @@ rh.RestuarantPageController = class {
 	}
 }
 
+rh.SettingsPageController = class {
+	/** constructor */
+	constructor() {
+		console.log(rh.KEY_NAME);
+		console.log(rh.KEY_GROUP);
+		rh.fbUserManager.beginListening(rh.fbAuthManager.uid, this.isStudent.bind(this));
+		$("#logOut").click((event) => {
+			console.log("Sign out.");
+			rh.fbAuthManager.signOut();
+		});
+
+	}
+	isStudent() {
+		$("#name").html(`${rh.KEY_NAME}`);
+		if(rh.KEY_GROUP == "STUDENT") {
+			rh.KEY_MEALS = 120;
+			rh.KEY_DB = 360.00;
+			console.log("here");
+			$("#meals").html(`Meals : ${rh.KEY_MEALS}`);
+			$("#dB").html(`DB : $ ${rh.KEY_DB}`);
+		} else {
+			rh.KEY_MEALS = 90;
+			rh.KEY_DB = 120;
+			$("#meals").html(`Meals : ${rh.KEY_MEALS}`);
+			$("#dB").html(`DB : ${rh.KEY_DB}`);
+		}
+	}
+}
+
+rh.FbSettingsManager = class {
+	constructor(uid) {
+		this._ref = firebase.firestore().collection(rh.COLLECTION_PHOTOCAPS);
+		this._documentSnapshots = [];
+		this._unsubscribe = null;
+		this._uid = uid;
+	}
+}
+
 rh.FbChaunceyManager = class {
 	constructor(uid) {
 		this._collectionRef = firebase.firestore().collection(rh.COLLECTION_CHAUNCEY_ITEMS);
 		this._documentSnapshots = [];
 		this._unsubscribe = null;
 		this._uid = uid;
-		console.log(uid);
+		rh.fbUserManager.beginListening(this._uid, this.addToOrder.bind(this));
+		console.log(rh.KEY_GROUP);
 	}
 
 	beginListening(changeListener) {
-		console.log("Listenign for menu items");
+		console.log("Listening for menu items");
 		let query = this._collectionRef.orderBy(rh.KEY_LAST_TOUCHED, "desc").limit(3);
 		if(this._uid) {
 			query = query.where(rh.KEY_UID, "==", this._uid);
@@ -321,6 +351,7 @@ rh.FbChaunceyManager = class {
 			}
 		})
 	}
+	
 	stopListening() {
 		this._unsubscribe();
 	}
@@ -328,47 +359,22 @@ rh.FbChaunceyManager = class {
 	addToOrder() {
 		console.log("Added to Order!");
 	}
+	getMennuItemAtIndex(index) {
+		return new rh.Item(
+			this._documentSnapshots[index].id,
+			this._documentSnapshots[index],
+		)
+	}
 }
-
 
 rh.ChaunceysPageController = class {
 	/** constructor */
 	constructor() {
 		rh.fbChaunceyManager.beginListening(this.updateView.bind(this));
-
-		$("#union-cafe").click(function () {
-			console.log("You have clicked Union Cafe");
-			window.location.href = `/union-cafe.html`;
-			return false;
+		$("#shoppingCart").click((event) => {
+			console.log("clicked on cart");
+			window.location.href ="/shopping-cart.html";
 		});
-		$("#rose-gardens").click((event) => {
-			console.log("You have clicked Union Cafe");
-			window.location.href = `/rose-gardens.html`;
-		});
-		$("#moench-cafe").click((event) => {
-			console.log("You have clicked Union Cafe");
-			window.location.href = `/moench-cafe.html`;
-		});
-		$("#chaunceys").click((event) => {
-			console.log("You have clicked Union Cafe");
-			window.location.href = `/chaunceys.html`;
-		});
-		$("#beanies").click((event) => {
-			console.log("You have clicked Union Cafe");
-			window.location.href = `/beanies.html`;
-		});
-		$("#settings").click((event) => {
-			console.log("You have clicked Union Cafe");
-			window.location.href = "/settings.html";
-		});
-		$("#addToOrder").click((event) => {
-			console.log("Added to Order!");
-		});
-		$("#menuSignOut").click((event) => {
-			console.log("Sign out.");
-			rh.fbAuthManager.signOut();
-		});
-
 
 	}
 	updateView() {
@@ -418,13 +424,13 @@ rh.initializePage = function () {
 		const urlUid = urlParams.get('uid');
 		rh.fbChaunceyManager = new rh.FbChaunceyManager(urlUid);
 		new rh.ChaunceysPageController();
-	} else if ($("#union-page").length) {
+	} else if ($("#union-cafe-page").length) {
 		console.log("On Union Cafe page");
 		new rh.UnionPageController();
-	} else if ($("#rg-page").length) {
+	} else if ($("#rose-gardens-page").length) {
 		console.log("On Rose Gardens page");
 		new rh.RGPageController();
-	} else if ($("#mc-page").length) {
+	} else if ($("#moenhc-cafe-page").length) {
 		console.log("On Moench Cafe page");
 		new rh.MCPageController();
 	} else if ($("#beanies-page").length) {
@@ -447,6 +453,7 @@ $(document).ready(() => {
 	rh.fbAuthManager.beginListening(() => {
 		console.log("Auth state changed. isSignedIn = ", rh.fbAuthManager.isSignIn);
 		rh.checkForRedirects();
+		console.log(rh.KEY_NAME);
 		rh.initializePage();
 	});
 });

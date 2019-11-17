@@ -65,7 +65,7 @@ body {
     text-align: center;
 }
 
-#main-page, 
+#main-page,
 #chaunceys-page,
 #union-page,
 #rg-page,
@@ -100,15 +100,17 @@ body {
 }
 
 /* @media (max-width: 950px) { */
-    .icon{
-        margin: 5px;
-        padding: 5px;
-        /* max-width: 100px; */
-    } 
-    .icon img {
-        width: 75px;
-        height: 75px;
-    }   
+.icon {
+    margin: 5px;
+    padding: 5px;
+    /* max-width: 100px; */
+}
+
+.icon img {
+    width: 75px;
+    height: 75px;
+}
+
 /* } */
 /* @media (min-width: 750px){
     .icon {
@@ -134,52 +136,98 @@ body {
     }
   } */
 
-  /* Option Pages */
-  #items {
-      margin-bottom: 10px;
-  }
-  #favorites {
-      height: 20px;
-      margin: 2px;
-  }
-  #specials {
+/* Option Pages */
+#items {
+    margin-bottom: 10px;
+}
+
+#favorites {
+    height: 20px;
+    margin: 2px;
+}
+
+#specials {
     height: 25px;
     margin: 2px;
-  }
-  #daily {
+}
+
+#daily {
     height: 20px;
     margin: 3px;
-  }
-  #cart {
-      height: 25px;
-  }
+}
 
-  #drawer button i {
-      color: white;
-  }
+#cart {
+    height: 25px;
+}
 
-  /* Settings Page */
-  .btn-outline-danger:hover{
-      background-color: #800000;
-      border-color: #800000;
-  }
-  .btn-outline-danger {
-      color: #800000;
-      border-color: #800000;
-  }
-  #profile {
-      height: 75%;
-  }
-  #profileCard {
-      width: 75%;
-  }
+#drawer button i {
+    color: white;
+}
 
-  #shoppingCart {
-      height: 20px;
-      width: 20px;
-  }
+/* Settings Page */
+.btn-outline-danger:hover {
+    background-color: #800000;
+    border-color: #800000;
+}
 
-  .btn {
-      color: #800000;
-  }
+.btn-outline-danger {
+    color: #800000;
+    border-color: #800000;
+}
 
+#profile {
+    height: 75%;
+}
+
+#profileCard {
+    width: 75%;
+}
+
+#shoppingCart {
+    height: 20px;
+    width: 20px;
+}
+
+.btn {
+    color: #800000;
+}
+
+#burger {
+    color: white;
+    left: 10px;
+}
+
+#pg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+#studentinfo {
+    background-color: #800000;
+    color: azure;
+}
+
+hr {
+    color: black;
+    background-color: blue;
+}
+
+#link1cont {
+    display: inline-flex;
+}
+
+#link1 {
+    float: right;
+    width: 80%;
+}
+
+#linkicon {
+    float: left;
+    width: 20%;
+}
+hr {
+    color: #800000;
+    background-color: #800000;
+}

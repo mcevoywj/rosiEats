@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="styles/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="styles/main.css">
+    <title>RosiEats</title>
+</head>
+
+<body>
+    <nav class="navbar fixed-top">
+        <div class="btn-group">
+            <span data-toggle="dropdown">
+                <i class="material-icons">menu</i>
+            </span>
+            <div class="dropdown-menu dropdown-menu-left" data-target="#navDrawer">
+
+            </div>
+        </div>
+        <div class="col">
+            <a class="navbar-brand" href="/main.html">Moench Cafe</a>
+        </div>
+        <div class="btn-group">
+            <span data-target="#shoppingcart">
+                <img id="cart" src="images/cart.png" alt="shopping cart">
+            </span>
+        </div>
+    </nav>
+
+    <div id="mc-page" class="container page-container">
+        <div class="row">
+            <img id="favorites" src="images/favorites.png" alt="favorites">
+            Favorites
+        </div>
+        <hr>
+        <div id="items" class="row">
+            <div class="icon col">
+                <img src="images/coffee.png" alt="Coffee">
+                <h6>Coffee</h6>
+            </div>
+            <div class="icon col">
+                <img src="images/banana.png" alt="Banana">
+                <h6>Banana</h6>
+            </div>
+            <div class="icon col">
+                <img src="images/cold_brew.png" alt="Cold Brew">
+                <h6>Cold Brew</h6>
+            </div>
+        </div>
+        
+        <div class="row">
+            <img id="daily" src="images/daily_menu.png" alt="daily menu">
+            Daily Menu
+        </div>
+        <hr>
+        <div id="items" class="row">
+            Insert Menu Items Here
+        </div>
+
+    </div>
+
+    <script src="scripts/jquery.min.js"></script>
+    <script src="scripts/popper.min.js"></script>
+    <script src="scripts/bootstrap.min.js"></script>
+    <script src="/__/firebase/6.3.5/firebase-app.js"></script>
+    <script src="/__/firebase/6.3.5/firebase-firestore.js"></script>
+    <script src="/__/firebase/init.js"></script>
+    <script src="scripts/main.js"></script>
+</body>
+
+</html>

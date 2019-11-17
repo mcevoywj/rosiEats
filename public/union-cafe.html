@@ -5,88 +5,166 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="styles/bootstrap.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
+    <link rel="stylesheet"
+        href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css"
+        integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX" crossorigin="anonymous">
     <link rel="stylesheet" href="styles/main.css">
     <title>RosiEats</title>
 </head>
 
 <body>
-    <nav class="navbar fixed-top">
-        <div class="btn-group">
-            <span data-toggle="dropdown">
-                <i class="material-icons">menu</i>
-            </span>
-            <div class="dropdown-menu dropdown-menu-left" data-target="#navDrawer">
+    <!-- <nav class="navbar fixed-top">
+    App Name
+  </nav> -->
+    <div id="union-cafe-page" class="container page-container">
 
+        <div id="pg" class="bmd-layout-container bmd-drawer-f-l bmd-drawer-overlay">
+            <header id="bar" class="bmd-layout-header">
+                <div class="navbar navbar-light bg-faded">
+                    <button id="burger" class="navbar-toggler" type="button" data-toggle="drawer" data-target="#dw-p1">
+                        <span class="sr-only">Toggle drawer</span>
+                        <i class="material-icons">menu</i>
+                    </button>
+                    <ul id="title" class="nav navbar-nav">
+                        <li class="nav-item">RosiEats</li>
+                    </ul>
+                    <div class="nav-item">
+                        <div class="btn-group">
+                            <span data-toggle="shoppingCart">
+                                <img id="#cart" src="images/cart.png" alt="shopping cart" style="height: 25px;">
+                            </span>
+                            <!-- <span data-toggle="dropdown">
+                                <i class="material-icons">menu</i>
+                            </span> -->
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <div id="dw-p1" class="bmd-layout-drawer bg-faded">
+                <header id="studentinfo">
+                    <a class="navbar-brand">pic</a>
+                    <a class="navbar-brand">name</a>
+                    <a class="navbar-brand">email</a>
+                </header>
+                <ul class="list-group">
+                    <a href="/union-cafe.html" id="link1cont">
+                        <img id="linkicon"
+                            src="images/union_cafe.png">
+                        <div id="link1" class="list-group-item">Union Cafe</div>
+                    </a>
+                    <hr>
+                    <a href="/chaunceys.html" id="link1cont">
+                        <img id="linkicon"
+                            src="images/chaunceys.png">
+                        <div id="link1" class="list-group-item">Chauncey's</div>
+                    </a>
+                    <hr>
+                    <a href="/rose-gardens.html" id="link1cont">
+                        <img id="linkicon"
+                            src="images/rose_gardens.png">
+                        <div id="link1" class="list-group-item">Rose Gardens</div>
+                    </a>
+                    <hr>
+                    <a href="/beanies.html" id="link1cont">
+                        <img id="linkicon"
+                            src="images/beanies.png">
+                        <div id="link1" class="list-group-item">Beanies</div>
+                    </a>
+                    <hr>
+                    <a href="/moench-cafe.html" id="link1cont">
+                        <img id="linkicon"
+                            src="images/moench_cafe.png">
+                        <div id="link1" class="list-group-item">Moench Cafe</div>
+                    </a>
+                    <hr>
+                    <a href="/settings.html" id="link1cont">
+                        <img id="linkicon"
+                            src="images/settings.png">
+                        <div id="link1" class="list-group-item">Settings</div>
+                    </a>
+                </ul>
             </div>
-        </div>
-        <div class="col">
-            <a class="navbar-brand" href="/main.html">Union Cafe</a>
-        </div>
-        <div class="btn-group">
-            <span data-target="#shoppingcart">
-                <img id="cart" src="images/cart.png" alt="shopping cart">
-            </span>
-        </div>
-    </nav>
+            <main class="bmd-layout-content">
+                <div class="container">
 
-    <div id="union-page" class="container page-container">
-        <div class="row">
-            <img id="favorites" src="images/favorites.png" alt="favorites">
-            Favorites
-        </div>
-        <hr>
-        <div id="items" class="row">
-            <div class="icon col">
-                <img src="images/sushi.png" alt="Sushi">
-                <h6>Sushi</h6>
-            </div>
-            <div class="icon col">
-                <img src="images/nuggs.png" alt="Chicken Nuggets">
-                <h6>Chicken Nuggets</h6>
-            </div>
-            <div class="icon col">
-                <img src="images/omlette.png" alt="Omlette Bar">
-                <h6>Omlette Bar</h6>
-            </div>
-        </div>
-        <!-- <hr> -->
-        <div class="row">
-            <img id="specials" src="images/weekly_specials.png" alt="specials">
-            Weekly Specials
-        </div>
-        <hr>
-        <div id="items" class="row">
-            <div class="icon col">
-                <img src="images/stir_fry.png" alt="Stir Fry Bar">
-                <h6>Stir Fry Bar</h6>
-            </div>
-            <div class="icon col">
-                <img src="images/beef_stew.png" alt="Tuscan Beef Stew">
-                <h6>Tuscan Beef Stew</h6>
-            </div>
-            <div class="icon col">
-                <img src="images/strawberry_banana_pancakes.png" alt="Strawberry Banana Pancakes">
-                <h6>Strawberry Banana Pancakes</h6>
-            </div>
-        </div>
-        <div class="row">
-            <img id="daily" src="images/daily_menu.png" alt="daily menu">
-            Daily Menu
-        </div>
-        <hr>
-        <div id="items" class="row">
-            Insert Menu Items Here
+                    <div id="union-page" class="container page-container">
+                        <div class="row">
+                            <img id="favorites" src="images/favorites.png" alt="favorites">
+                            Favorites
+                        </div>
+                        <hr>
+                        <div id="items" class="row">
+                            <div class="icon col">
+                                <img src="images/sushi.png" alt="Sushi">
+                                <h6>Sushi</h6>
+                            </div>
+                            <div class="icon col">
+                                <img src="images/nuggs.png" alt="Chicken Nuggets">
+                                <h6>Chicken Nuggets</h6>
+                            </div>
+                            <div class="icon col">
+                                <img src="images/omlette.png" alt="Omlette Bar">
+                                <h6>Omlette Bar</h6>
+                            </div>
+                        </div>
+                        <!-- <hr> -->
+                        <div class="row">
+                            <img id="specials" src="images/weekly_specials.png" alt="specials">
+                            Weekly Specials
+                        </div>
+                        <hr>
+                        <div id="items" class="row">
+                            <div class="icon col">
+                                <img src="images/stir_fry.png" alt="Stir Fry Bar">
+                                <h6>Stir Fry Bar</h6>
+                            </div>
+                            <div class="icon col">
+                                <img src="images/beef_stew.png" alt="Tuscan Beef Stew">
+                                <h6>Tuscan Beef Stew</h6>
+                            </div>
+                            <div class="icon col">
+                                <img src="images/strawberry_banana_pancakes.png" alt="Strawberry Banana Pancakes">
+                                <h6>Strawberry Banana Pancakes</h6>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <img id="daily" src="images/daily_menu.png" alt="daily menu">
+                            Daily Menu
+                        </div>
+                        <hr>
+                        <div id="items" class="row">
+                            Insert Menu Items Here
+                        </div>
+                
+                    </div>
+
+                </div>
+            </main>
         </div>
 
     </div>
-
     <script src="scripts/jquery.min.js"></script>
     <script src="scripts/popper.min.js"></script>
     <script src="scripts/bootstrap.min.js"></script>
     <script src="/__/firebase/6.3.5/firebase-app.js"></script>
+    <script src="/__/firebase/6.3.5/firebase-auth.js"></script>
     <script src="/__/firebase/6.3.5/firebase-firestore.js"></script>
     <script src="/__/firebase/init.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
+    </script>
+    <script src="https://unpkg.com/popper.js@1.12.6/dist/umd/popper.js"
+        integrity="sha384-fA23ZRQ3G/J53mElWqVJEGJzU0sTs+SvzG8fXVWP+kJQ1lwFAOkcUOysnlKJC33U" crossorigin="anonymous">
+    </script>
+    <script src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js"
+        integrity="sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9" crossorigin="anonymous">
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('body').bootstrapMaterialDesign();
+        });
+    </script>
     <script src="scripts/main.js"></script>
 </body>
 
