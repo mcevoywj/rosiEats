@@ -137,9 +137,20 @@ body {
   } */
 
 /* Option Pages */
-#items {
+/* #fav,
+#special {
     margin-bottom: 10px;
+    margin-left: 5px;
+} */
+#fav-menu, #special-menu {
+    justify-content: center;
+
 }
+/* #fav, #special {
+    height: 141px;
+    width: 621px;
+    margin-left: -20px;
+} */
 
 #favorites {
     height: 20px;
@@ -153,7 +164,7 @@ body {
 
 #daily {
     height: 20px;
-    margin: 3px;
+   
 }
 
 #cart {
@@ -230,4 +241,9 @@ hr {
 hr {
     color: #800000;
     background-color: #800000;
+}
+.modal {
+    opacity: 100;
+    transition: linear;
+    transition: ease-in-out;
 }

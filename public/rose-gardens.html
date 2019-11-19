@@ -27,7 +27,7 @@
                         <i class="material-icons">menu</i>
                     </button>
                     <ul id="title" class="nav navbar-nav">
-                        <li class="nav-item">RosiEats</li>
+                        <li class="nav-item">Rose Gardens</li>
                     </ul>
                     <div class="nav-item">
                         <div class="btn-group">
@@ -88,18 +88,21 @@
                             Favorites
                         </div>
                         <hr>
-                        <div id="items" class="row">
-                            <div class="icon col">
-                                <img src="images/baja_bowl.png" alt="Baja Bowl">
-                                <h6>Baja Bowl</h6>
-                            </div>
-                            <div class="icon col">
-                                <img src="images/gobbler.png" alt="The Gobbler">
-                                <h6>The Gobbler</h6>
-                            </div>
-                            <div class="icon col">
-                                <img src="images/tomato_basil.png" alt="Tomato Basil Soup">
-                                <h6>Tomato Basil Soup</h6>
+                        <div id="fav-menu" class="row">
+
+                            <div id="fav" class="row">
+                                <!-- <div class="icon col">
+                                    <img src="images/baja_bowl.png" alt="Baja Bowl">
+                                    <h6>Baja Bowl</h6>
+                                </div>
+                                <div class="icon col">
+                                    <img src="images/gobbler.png" alt="The Gobbler">
+                                    <h6>The Gobbler</h6>
+                                </div>
+                                <div class="icon col">
+                                    <img src="images/tomato_basil.png" alt="Tomato Basil Soup">
+                                    <h6>Tomato Basil Soup</h6>
+                                </div> -->
                             </div>
                         </div>
                         <!-- <hr> -->
@@ -108,17 +111,20 @@
                             Weekly Specials
                         </div>
                         <hr>
-                        <div id="items" class="row">
-                            <div class="icon col">
-                                <img src="images/texan.png" alt="The Texan">
-                                <h6>The Texan</h6>
-                            </div>
-                            <div class="icon col">
-                                <img src="images/broccoli_cheddar.png" alt="Broccoli Cheddar Soup">
-                                <h6>Broccoli Cheddar Soup</h6>
-                            </div>
-                            <div class=" col">
+                        <div id="special-menu" class="row">
 
+                            <div id="special" class="row">
+                                <!-- <div class="icon col">
+                                    <img src="images/texan.png" alt="The Texan" data-toggle="modal" data-target="#modal">
+                                    <h6>The Texan</h6>
+                                </div>
+                                <div class="icon col">
+                                    <img src="images/broccoli_cheddar.png" alt="Broccoli Cheddar Soup">
+                                    <h6>Broccoli Cheddar Soup</h6>
+                                </div>
+                                <div class=" col">
+                                    
+                                </div> -->
                             </div>
                         </div>
                         <div class="row">
@@ -130,6 +136,45 @@
                             Insert Menu Items Here
                         </div>
 
+                    </div>
+                    <!-- Modal -->
+                    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="add photo"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Buffalo Chicken Flatbread</h5>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="modal-box row justify-content-center">
+                                        <div class="modal-icon col">
+
+                                            <img src="images/buffalo_chkn_flatbread.png"
+                                                alt="Buffalo Chicken Flatbread">
+                                        </div>
+                                        <div class="col">
+                                            <h3>Calories: 190</h3>
+                                            <p>*Calories per slice</p>
+                                        </div>
+                                    </div>
+                                    <div class="modal-box row">
+                                        <h6>Ingredients:</h6>
+                                        <p>Flatbread or Naan, BBQ sauce, Red Hot Buffalo Wings Sauce, Chicken (diced),
+                                            Mozzarella Cheese
+                                            (shredded), Gorgonzola or Blue Cheese (crumbled), Green Onions (chopped)</p>
+                                    </div>
+                                </div>
+
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-light"
+                                        data-dismiss="modal">CANCEL</button>
+                                    <button type="button" id="submit-photo" class="btn btn-outline-light"
+                                        data-dismiss="modal">ADD TO
+                                        ORDER</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
