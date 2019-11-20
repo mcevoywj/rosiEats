@@ -21,7 +21,10 @@ rh.KEY_GROUP = "group";
 
 rh.COLLECTION_CHAUNCEYS = "Chaunceys";
 rh.COLLECTION_ROSE_GARDEN = "Rose Gardens";
-rh.KEY_ITEM_NAME = "item name";
+rh.COLLECTION_UNION_CAFE = "Union Cafe";
+rh.COLLECTION_MOENCH_CAFE = "Moench Cafe";
+rh.COLLECTION_BEANIES = "Beanies";
+rh.KEY_ITEM_NAME = "itemName";
 rh.KEY_ITEM_IMAGE_URL = "imageUrl";
 rh.KEY_INGREDIENTS = "ingredients";
 rh.KEY_CALORIES = 0;
@@ -29,22 +32,23 @@ rh.KEY_SHORT = "short";
 rh.KEY_MENU_TYPE = "menuType";
 rh.KEY_LAST_TOUCHED = "lastTouched";
 
-
-
+rh.COLLECTION_CART = "Shopping Cart";
+rh.KEY_USER = "user";
+rh.KEY_MENU = "menu";
 
 rh.fbOrderManager = null;
 rh.fbUserManager = null;
 rh.fbItemManager = null;
 rh.fbAuthManager = null;
-rh.fbChaunceyManager = null;
-rh.fbRoseGardenManager = null;
+rh.fbResturantManager = null;
+rh.fbShoppingCartManager = null;
 
 rh.Order = class {
-	constructor(id, item, price, quantity) {
-		this.id = id;
+	constructor(uid, item, menu, imageUrl) {
+		this.uid = uid;
 		this.item = item;
-		this.price = price;
-		this.quantity = quantity;
+		this.menu = menu;
+		this.imageUrl = imageUrl;
 	}
 }
 
@@ -56,16 +60,6 @@ rh.Item = class {
 		this.ingredients = ingredients;
 		this.calPer = calPer;
 		this.calories = calories;
-	}
-}
-
-rh.User = class {
-	constructor(id, name, email, meals, dB) {
-		this.id = id;
-		this.name = name;
-		this.email = email;
-		this.meals = meals;
-		this.dB = dB;
 	}
 }
 
@@ -143,7 +137,6 @@ rh.FbAuthManager = class {
 		firebase.auth().signOut();
 	}
 }
-
 rh.FbUserManager = class {
 	constructor() {
 		this._collectionRef = firebase.firestore().collection(rh.COLLECTION_USERS);
@@ -224,7 +217,6 @@ rh.FbUserManager = class {
 	}
 
 }
-
 rh.LogInPageController = class {
 	/** constructor */
 	constructor() {
@@ -238,7 +230,6 @@ rh.LogInPageController = class {
 
 
 }
-
 rh.MainPageController = class {
 	/** constructor */
 	constructor(userId) {
@@ -270,11 +261,19 @@ rh.MainPageController = class {
 	}
 
 }
-
+rh.FbSettingsManager = class {
+	constructor(uid) {
+		this._ref = firebase.firestore().collection(rh.COLLECTION_PHOTOCAPS);
+		this._documentSnapshots = [];
+		this._unsubscribe = null;
+		this._uid = uid;
+	}
+}
 rh.SettingsPageController = class {
 	/** constructor */
 	constructor() {
 		rh.fbUserManager.beginListening(rh.fbAuthManager.uid, this.isStudent.bind(this));
+		rh.fbUserManager.beginListening(rh.fbAuthManager.uid, this.updateStudentInfo.bind(this));
 		$("#logOut").click((event) => {
 			console.log("Sign out.");
 			rh.fbAuthManager.signOut();
@@ -295,17 +294,10 @@ rh.SettingsPageController = class {
 			$("#dB").html(`DB : ${rh.KEY_DB}`);
 		}
 	}
-}
-
-rh.FbSettingsManager = class {
-	constructor(uid) {
-		this._ref = firebase.firestore().collection(rh.COLLECTION_PHOTOCAPS);
-		this._documentSnapshots = [];
-		this._unsubscribe = null;
-		this._uid = uid;
+	updateStudentInfo() {
+		rh.updateStudentInfo();
 	}
 }
-
 rh.FbResturantManager = class {
 	constructor(uid, menu) {
 		this._collectionRef = firebase.firestore().collection(menu);
@@ -338,9 +330,6 @@ rh.FbResturantManager = class {
 	get length() {
 		return this._documentSnapshots.length;
 	}
-	addToOrder() {
-		//	console.log("Added to Order!");
-	}
 	getMenuItemAtIndex(index) {
 		return new rh.Item(
 			this._documentSnapshots[index].id,
@@ -352,101 +341,99 @@ rh.FbResturantManager = class {
 		)
 	}
 }
-
 rh.ChaunceysPageController = class {
-		/** constructor */
-		constructor() {
-			rh.fbResturantManager.beginListening("fav", this.updateFavView.bind(this));
-			rh.fbResturantManager.beginListening("special", this.updateSpecialView.bind(this));
-			// rh.fbChaunceyManager.beginListening("item", this.updateView.bind(this));
-			rh.fbResturantManager.beginListening("fav", this.updateFavModals.bind(this));
-			rh.fbResturantManager.beginListening("special", this.updateSpecialModals.bind(this));
-			$("#shoppingCart").click((event) => {
-				console.log("clicked on cart");
-				window.location.href = "/shopping-cart.html";
-			});
-			$("#addToOrder").click((event) => {
-				console.log("clicked on cart");
-				window.location.href = "/shopping-cart.html";
-			});
+	/** constructor */
+	constructor() {
+		rh.fbResturantManager.beginListening("fav", this.updateFavView.bind(this));
+		rh.fbResturantManager.beginListening("special", this.updateSpecialView.bind(this));
+		// rh.fbChaunceyManager.beginListening("item", this.updateView.bind(this));
+		rh.fbResturantManager.beginListening("fav", this.updateFavModals.bind(this));
+		rh.fbResturantManager.beginListening("special", this.updateSpecialModals.bind(this));
+		rh.fbUserManager.beginListening(rh.fbAuthManager.uid, this.updateStudentInfo.bind(this));
+		$("#shoppingCart").click((event) => {
+			console.log("clicked on cart");
+			window.location.href = "/shopping-cart.html";
+		});
+		$(document).on('click', '#addToOrder', function () {
+			// alert(`Added To Order!`);
+			$(this).html("ADDED TO ORDER");
+			// $("#addToOrder").html("ADDED TO ORDER");
+			rh.addToOrder(rh.fbAuthManager.uid, $(this).attr("name"), rh.COLLECTION_CHAUNCEYS);
+		});
+	}
+	updateFavView() {
+		$("#fav").removeAttr("id").hide();
+		let $newMenu = $("<div></div>").attr("id", "fav").addClass("row");
+		for (let k = 0; k < rh.fbResturantManager.length; k++) {
+			const $newItem = this.createMenuItem(
+				rh.fbResturantManager.getMenuItemAtIndex(k)
+			);
+			$newMenu.append($newItem);
 		}
-		updateFavView() {
-			console.log("hide");
-			$("#fav").removeAttr("id").hide();
-			let $newMenu = $("<div></div>").attr("id", "fav").addClass("row");
-			for (let k = 0; k < rh.fbResturantManager.length; k++) {
-				const $newItem = this.createMenuItem(
-					rh.fbResturantManager.getMenuItemAtIndex(k)
-				);
-				$newMenu.append($newItem);
-			}
-			console.log($newMenu);
-			$("#fav-menu").append($newMenu);
+		$("#fav-menu").append($newMenu);
+	}
+	// updateView() {
+	// 	// $("#fav").removeAttr("id").hide();
+	// 	let $newMenu = $("<div></div>").attr("id", "item").addClass("row");
+	// 	for (let k = 0; k < rh.fbChaunceyManager.length; k++) {
+	// 		const $newItem = this.createMenuItem(
+	// 			rh.fbChaunceyManager.getMenuItemAtIndex(k)
+	// 		);
+	// 		$newMenu.append($newItem);
+	// 	}
+	// 	console.log($newMenu);
+	// 	$("#fav").append($newMenu);
+	// }
+	updateSpecialView() {
+		$("#special").removeAttr("id").hide();
+		let $newMenu = $("<div></div>").attr("id", "special").addClass("row");
+		for (let k = 0; k < rh.fbResturantManager.length; k++) {
+			const $newItem = this.createMenuItem(
+				rh.fbResturantManager.getMenuItemAtIndex(k)
+			);
+			$newMenu.append($newItem);
 		}
-		// updateView() {
-		// 	// $("#fav").removeAttr("id").hide();
-		// 	let $newMenu = $("<div></div>").attr("id", "item").addClass("row");
-		// 	for (let k = 0; k < rh.fbChaunceyManager.length; k++) {
-		// 		const $newItem = this.createMenuItem(
-		// 			rh.fbChaunceyManager.getMenuItemAtIndex(k)
-		// 		);
-		// 		$newMenu.append($newItem);
-		// 	}
-		// 	console.log($newMenu);
-		// 	$("#fav").append($newMenu);
-		// }
-		updateSpecialView() {
-			$("#special").removeAttr("id").hide();
-			let $newMenu = $("<div></div>").attr("id", "special").addClass("row");
-			for (let k = 0; k < rh.fbResturantManager.length; k++) {
-				const $newItem = this.createMenuItem(
-					rh.fbResturantManager.getMenuItemAtIndex(k)
-				);
-				$newMenu.append($newItem);
-			}
-			$("#special-menu").append($newMenu);
+		$("#special-menu").append($newMenu);
+	}
+	updateFavModals() {
+		let $newModals = $("<div></div>").attr("id", "chaunceys-modal").addClass("container");
+		for (let k = 0; k < rh.fbResturantManager.length; k++) {
+			const $newItemModal = this.createItemModal(
+				rh.fbResturantManager.getMenuItemAtIndex(k)
+			);
+			$newModals.append($newItemModal);
 		}
-		updateFavModals() {
-			let $newModals = $("<div></div>").attr("id", "chaunceys-modal").addClass("container");
-			for (let k = 0; k < rh.fbResturantManager.length; k++) {
-				const $newItemModal = this.createItemModal(
-					rh.fbResturantManager.getMenuItemAtIndex(k)
-				);
-				$newModals.append($newItemModal);
-			}
-			console.log($newModals);
-			$("#chaunceys-page").append($newModals);
+		$("#chaunceys-page").append($newModals);
+	}
+	updateSpecialModals() {
+		let $newModals = $("<div></div>").attr("id", "chaunceys-modal").addClass("container");
+		for (let k = 0; k < rh.fbResturantManager.length; k++) {
+			const $newItemModal = this.createItemModal(
+				rh.fbResturantManager.getMenuItemAtIndex(k)
+			);
+			$newModals.append($newItemModal);
 		}
-		updateSpecialModals() {
-			let $newModals = $("<div></div>").attr("id", "chaunceys-modal").addClass("container");
-			for (let k = 0; k < rh.fbResturantManager.length; k++) {
-				const $newItemModal = this.createItemModal(
-					rh.fbResturantManager.getMenuItemAtIndex(k)
-				);
-				$newModals.append($newItemModal);
-			}
-			console.log($newModals);
-			$("#chaunceys-page").append($newModals);
-		}
-		createMenuItem(menuItem) {
-			const $newItem = $(
-				`<div class="icon col" data-toggle="modal" data-target="#${menuItem.name}" >
+		$("#chaunceys-page").append($newModals);
+	}
+	createMenuItem(menuItem) {
+		const $newItem = $(
+			`<div class="icon col" data-toggle="modal" data-target="#${menuItem.name}" >
 				<img src="${menuItem.image}" alt="${menuItem.name}">
 				<h6>${menuItem.name}</h6>
 			</div>
 			`
-			);
-			$newItem.click((event) => {
-				console.log("You have clicked ", menuItem.name);
-				$(`#${menuItem.name}`).modal('show');
-			})
-			// $(`#${menuItem.name}`).modal('hide');
-			return $newItem;
+		);
+		$newItem.click((event) => {
+			console.log("You have clicked ", menuItem.name);
+			$(`#${menuItem.name}`).modal('show');
+		})
+		// $(`#${menuItem.name}`).modal('hide');
+		return $newItem;
 
-		}
-		createItemModal(menuItem) {
-				const $newModal = $(
-						`<div class="modal" data-backdrop="true" id="${menuItem.name}" tabindex="-1" role="dialog" aria-labelledby="add photo"
+	}
+	createItemModal(menuItem) {
+		const $newModal = $(
+			`<div class="modal" data-backdrop="true" id="${menuItem.name}" tabindex="-1" role="dialog" aria-labelledby="add photo"
 		aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered" role="document">
 			<div class="modal-content">
@@ -473,114 +460,113 @@ rh.ChaunceysPageController = class {
 				<div class="modal-footer">
 					<button type="button" class="btn btn-outline-danger"
 						data-dismiss="modal">CANCEL</button>
-					<button type="button" id="addToOrder" class="btn btn-outline-danger"
+					<button type="button" name="${menuItem.id}" id="addToOrder" class="btn btn-outline-danger"
 						>ADD TO ORDER</button>
 				</div>
 			</div>
 		</div>
 	</div>`
-						);
-						return $newModal;
+		);
+		return $newModal;
 	}
-	addToOrder() {
-		console.log("ADDED BITCH!");
+	updateStudentInfo() {
+		rh.updateStudentInfo();
 	}
 }
-
 rh.RoseGardenPageController = class {
-		/** constructor */
-		constructor() {
-			rh.fbResturantManager.beginListening("fav", this.updateFavView.bind(this));
-			rh.fbResturantManager.beginListening("special", this.updateSpecialView.bind(this));
-			// rh.fbRoseGardenManager.beginListening("item", this.updateView.bind(this));
-			rh.fbResturantManager.beginListening("fav", this.updateFavModals.bind(this));
-			rh.fbResturantManager.beginListening("special", this.updateSpecialModals.bind(this));
-			$("#shoppingCart").click((event) => {
-				console.log("clicked on cart");
-				window.location.href = "/shopping-cart.html";
-			});
-			$("#addToOrder").click((event) => {
-				console.log("clicked on cart");
-				window.location.href = "/shopping-cart.html";
-			});
+	/** constructor */
+	constructor() {
+		rh.fbResturantManager.beginListening("fav", this.updateFavView.bind(this));
+		rh.fbResturantManager.beginListening("special", this.updateSpecialView.bind(this));
+		// rh.fbRoseGardenManager.beginListening("item", this.updateView.bind(this));
+		rh.fbResturantManager.beginListening("fav", this.updateFavModals.bind(this));
+		rh.fbResturantManager.beginListening("special", this.updateSpecialModals.bind(this));
+		rh.fbUserManager.beginListening(rh.fbAuthManager.uid, this.updateStudentInfo.bind(this));
+		$("#shoppingCart").click((event) => {
+			console.log("clicked on cart");
+			window.location.href = "/shopping-cart.html";
+		});
+		$(document).on('click', '#addToOrder', function () {
+			// alert(`Added To Order!`);
+			$(this).html("ADDED TO ORDER");
+			// $("#addToOrder").html("ADDED TO ORDER");
+			rh.addToOrder(rh.fbAuthManager.uid, $(this).attr("name"), rh.COLLECTION_ROSE_GARDEN);
+		});
+	}
+	updateFavView() {
+		console.log("hide");
+		$("#fav").removeAttr("id").hide();
+		let $newMenu = $("<div></div>").attr("id", "fav").addClass("row");
+		for (let k = 0; k < rh.fbResturantManager.length; k++) {
+			const $newItem = this.createMenuItem(
+				rh.fbResturantManager.getMenuItemAtIndex(k)
+			);
+			$newMenu.append($newItem);
 		}
-		updateFavView() {
-			console.log("hide");
-			$("#fav").removeAttr("id").hide();
-			let $newMenu = $("<div></div>").attr("id", "fav").addClass("row");
-			for (let k = 0; k < rh.fbResturantManager.length; k++) {
-				const $newItem = this.createMenuItem(
-					rh.fbResturantManager.getMenuItemAtIndex(k)
-				);
-				$newMenu.append($newItem);
-			}
-			console.log($newMenu);
-			$("#fav-menu").append($newMenu);
+		$("#fav-menu").append($newMenu);
+	}
+	// updateView() {
+	// 	// $("#fav").removeAttr("id").hide();
+	// 	let $newMenu = $("<div></div>").attr("id", "item").addClass("row");
+	// 	for (let k = 0; k < rh.fbResturantManager.length; k++) {
+	// 		const $newItem = this.createMenuItem(
+	// 			rh.fbResturantManager.getMenuItemAtIndex(k)
+	// 		);
+	// 		$newMenu.append($newItem);
+	// 	}
+	// 	console.log($newMenu);
+	// 	$("#fav").append($newMenu);
+	// }
+	updateSpecialView() {
+		$("#special").removeAttr("id").hide();
+		let $newMenu = $("<div></div>").attr("id", "special").addClass("row");
+		for (let k = 0; k < rh.fbResturantManager.length; k++) {
+			const $newItem = this.createMenuItem(
+				rh.fbResturantManager.getMenuItemAtIndex(k)
+			);
+			$newMenu.append($newItem);
 		}
-		// updateView() {
-		// 	// $("#fav").removeAttr("id").hide();
-		// 	let $newMenu = $("<div></div>").attr("id", "item").addClass("row");
-		// 	for (let k = 0; k < rh.fbResturantManager.length; k++) {
-		// 		const $newItem = this.createMenuItem(
-		// 			rh.fbResturantManager.getMenuItemAtIndex(k)
-		// 		);
-		// 		$newMenu.append($newItem);
-		// 	}
-		// 	console.log($newMenu);
-		// 	$("#fav").append($newMenu);
-		// }
-		updateSpecialView() {
-			$("#special").removeAttr("id").hide();
-			let $newMenu = $("<div></div>").attr("id", "special").addClass("row");
-			for (let k = 0; k < rh.fbResturantManager.length; k++) {
-				const $newItem = this.createMenuItem(
-					rh.fbResturantManager.getMenuItemAtIndex(k)
-				);
-				$newMenu.append($newItem);
-			}
-			$("#special-menu").append($newMenu);
+		$("#special-menu").append($newMenu);
+	}
+	updateFavModals() {
+		let $newModals = $("<div></div>").attr("id", "rose-gardens-modal").addClass("container");
+		for (let k = 0; k < rh.fbResturantManager.length; k++) {
+			const $newItemModal = this.createItemModal(
+				rh.fbResturantManager.getMenuItemAtIndex(k)
+			);
+			$newModals.append($newItemModal);
 		}
-		updateFavModals() {
-			let $newModals = $("<div></div>").attr("id", "rose-gardens-modal").addClass("container");
-			for (let k = 0; k < rh.fbResturantManager.length; k++) {
-				const $newItemModal = this.createItemModal(
-					rh.fbResturantManager.getMenuItemAtIndex(k)
-				);
-				$newModals.append($newItemModal);
-			}
-			console.log($newModals);
-			$("#rose-gardens-page").append($newModals);
+		$("#rose-gardens-page").append($newModals);
+	}
+	updateSpecialModals() {
+		let $newModals = $("<div></div>").attr("id", "rose-gardens-modal").addClass("container");
+		for (let k = 0; k < rh.fbResturantManager.length; k++) {
+			const $newItemModal = this.createItemModal(
+				rh.fbResturantManager.getMenuItemAtIndex(k)
+			);
+			$newModals.append($newItemModal);
 		}
-		updateSpecialModals() {
-			let $newModals = $("<div></div>").attr("id", "rose-gardens-modal").addClass("container");
-			for (let k = 0; k < rh.fbResturantManager.length; k++) {
-				const $newItemModal = this.createItemModal(
-					rh.fbResturantManager.getMenuItemAtIndex(k)
-				);
-				$newModals.append($newItemModal);
-			}
-			console.log($newModals);
-			$("#rose-gardens-page").append($newModals);
-		}
-		createMenuItem(menuItem) {
-			const $newItem = $(
-				`<div class="icon col" data-toggle="modal" data-target="#${menuItem.name}" >
+		$("#rose-gardens-page").append($newModals);
+	}
+	createMenuItem(menuItem) {
+		const $newItem = $(
+			`<div class="icon col" data-toggle="modal" data-target="#${menuItem.name}" >
 				<img src="${menuItem.image}" alt="${menuItem.name}">
 				<h6>${menuItem.name}</h6>
 			</div>
 			`
-			);
-			$newItem.click((event) => {
-				console.log("You have clicked ", menuItem.name);
-				$(`#${menuItem.name}`).modal('show');
-			})
-			// $(`#${menuItem.name}`).modal('hide');
-			return $newItem;
+		);
+		$newItem.click((event) => {
+			console.log("You have clicked ", menuItem.name);
+			$(`#${menuItem.name}`).modal('show');
+		})
+		// $(`#${menuItem.name}`).modal('hide');
+		return $newItem;
 
-		}
-		createItemModal(menuItem) {
-				const $newModal = $(
-						`<div class="modal" data-backdrop="true" id="${menuItem.name}" tabindex="-1" role="dialog" aria-labelledby="add photo"
+	}
+	createItemModal(menuItem) {
+		const $newModal = $(
+			`<div class="modal" data-backdrop="true" id="${menuItem.name}" tabindex="-1" role="dialog" aria-labelledby="add photo"
 		aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered" role="document">
 			<div class="modal-content">
@@ -607,17 +593,17 @@ rh.RoseGardenPageController = class {
 				<div class="modal-footer">
 					<button type="button" class="btn btn-outline-danger"
 						data-dismiss="modal">CANCEL</button>
-					<button type="button" id="addToOrder" class="btn btn-outline-danger"
+					<button type="button" name="${menuItem.id}" id="addToOrder" class="btn btn-outline-danger"
 						>ADD TO ORDER</button>
 				</div>
 			</div>
 		</div>
 	</div>`
-						);
-						return $newModal;
+		);
+		return $newModal;
 	}
-	addToOrder() {
-		console.log("ADDED BITCH!");
+	updateStudentInfo() {
+		rh.updateStudentInfo();
 	}
 }
 rh.UnionCafePageController = class {
@@ -628,13 +614,16 @@ rh.UnionCafePageController = class {
 		// rh.fbRoseGardenManager.beginListening("item", this.updateView.bind(this));
 		rh.fbResturantManager.beginListening("fav", this.updateFavModals.bind(this));
 		rh.fbResturantManager.beginListening("special", this.updateSpecialModals.bind(this));
+		rh.fbUserManager.beginListening(rh.fbAuthManager.uid, this.updateStudentInfo.bind(this));
 		$("#shoppingCart").click((event) => {
 			console.log("clicked on cart");
 			window.location.href = "/shopping-cart.html";
 		});
-		$("#addToOrder").click((event) => {
-			console.log("clicked on cart");
-			window.location.href = "/shopping-cart.html";
+		$(document).on('click', '#addToOrder', function () {
+			// alert(`Added To Order!`);
+			$(this).html("ADDED TO ORDER");
+			// $("#addToOrder").html("ADDED TO ORDER");
+			rh.addToOrder(rh.fbAuthManager.uid, $(this).attr("name"), rh.COLLECTION_UNION_CAFE);
 		});
 	}
 	updateFavView() {
@@ -647,7 +636,6 @@ rh.UnionCafePageController = class {
 			);
 			$newMenu.append($newItem);
 		}
-		console.log($newMenu);
 		$("#fav-menu").append($newMenu);
 	}
 	// updateView() {
@@ -674,14 +662,13 @@ rh.UnionCafePageController = class {
 		$("#special-menu").append($newMenu);
 	}
 	updateFavModals() {
-		let $newModals = $("<div></div>").attr("id", "rose-gardens-modal").addClass("container");
+		let $newModals = $("<div></div>").attr("id", "union-cafe-modal").addClass("container");
 		for (let k = 0; k < rh.fbResturantManager.length; k++) {
 			const $newItemModal = this.createItemModal(
 				rh.fbResturantManager.getMenuItemAtIndex(k)
 			);
 			$newModals.append($newItemModal);
 		}
-		console.log($newModals);
 		$("#union-cafe-page").append($newModals);
 	}
 	updateSpecialModals() {
@@ -692,8 +679,7 @@ rh.UnionCafePageController = class {
 			);
 			$newModals.append($newItemModal);
 		}
-		console.log($newModals);
-		$("#rose-gardens-page").append($newModals);
+		$("#union-cafe-page").append($newModals);
 	}
 	createMenuItem(menuItem) {
 		const $newItem = $(
@@ -712,8 +698,8 @@ rh.UnionCafePageController = class {
 
 	}
 	createItemModal(menuItem) {
-			const $newModal = $(
-					`<div class="modal" data-backdrop="true" id="${menuItem.name}" tabindex="-1" role="dialog" aria-labelledby="add photo"
+		const $newModal = $(
+			`<div class="modal" data-backdrop="true" id="${menuItem.name}" tabindex="-1" role="dialog" aria-labelledby="add photo"
 	aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
@@ -740,34 +726,35 @@ rh.UnionCafePageController = class {
 			<div class="modal-footer">
 				<button type="button" class="btn btn-outline-danger"
 					data-dismiss="modal">CANCEL</button>
-				<button type="button" id="addToOrder" class="btn btn-outline-danger"
+				<button type="button" name="${menuItem.id}" id="addToOrder" class="btn btn-outline-danger"
 					>ADD TO ORDER</button>
 			</div>
 		</div>
 	</div>
 </div>`
-					);
-					return $newModal;
-}
-addToOrder() {
-	console.log("ADDED BITCH!");
-}
+		);
+		return $newModal;
+	}
+	updateStudentInfo() {
+		rh.updateStudentInfo();
+	}
 }
 rh.BeaniesPageController = class {
 	/** constructor */
 	constructor() {
 		rh.fbResturantManager.beginListening("fav", this.updateFavView.bind(this));
-		rh.fbResturantManager.beginListening("special", this.updateSpecialView.bind(this));
 		// rh.fbRoseGardenManager.beginListening("item", this.updateView.bind(this));
 		rh.fbResturantManager.beginListening("fav", this.updateFavModals.bind(this));
-		rh.fbResturantManager.beginListening("special", this.updateSpecialModals.bind(this));
+		rh.fbUserManager.beginListening(rh.fbAuthManager.uid, this.updateStudentInfo.bind(this));
 		$("#shoppingCart").click((event) => {
 			console.log("clicked on cart");
 			window.location.href = "/shopping-cart.html";
 		});
-		$("#addToOrder").click((event) => {
-			console.log("clicked on cart");
-			window.location.href = "/shopping-cart.html";
+		$(document).on('click', '#addToOrder', function () {
+			// alert(`Added To Order!`);
+			$(this).html("ADDED TO ORDER");
+			// $("#addToOrder").html("ADDED TO ORDER");
+			rh.addToOrder(rh.fbAuthManager.uid, $(this).attr("name"), rh.COLLECTION_BEANIES);
 		});
 	}
 	updateFavView() {
@@ -780,7 +767,6 @@ rh.BeaniesPageController = class {
 			);
 			$newMenu.append($newItem);
 		}
-		console.log($newMenu);
 		$("#fav-menu").append($newMenu);
 	}
 	// updateView() {
@@ -795,17 +781,6 @@ rh.BeaniesPageController = class {
 	// 	console.log($newMenu);
 	// 	$("#fav").append($newMenu);
 	// }
-	updateSpecialView() {
-		$("#special").removeAttr("id").hide();
-		let $newMenu = $("<div></div>").attr("id", "special").addClass("row");
-		for (let k = 0; k < rh.fbResturantManager.length; k++) {
-			const $newItem = this.createMenuItem(
-				rh.fbResturantManager.getMenuItemAtIndex(k)
-			);
-			$newMenu.append($newItem);
-		}
-		$("#special-menu").append($newMenu);
-	}
 	updateFavModals() {
 		let $newModals = $("<div></div>").attr("id", "rose-gardens-modal").addClass("container");
 		for (let k = 0; k < rh.fbResturantManager.length; k++) {
@@ -814,19 +789,7 @@ rh.BeaniesPageController = class {
 			);
 			$newModals.append($newItemModal);
 		}
-		console.log($newModals);
-		$("#rose-gardens-page").append($newModals);
-	}
-	updateSpecialModals() {
-		let $newModals = $("<div></div>").attr("id", "rose-gardens-modal").addClass("container");
-		for (let k = 0; k < rh.fbResturantManager.length; k++) {
-			const $newItemModal = this.createItemModal(
-				rh.fbResturantManager.getMenuItemAtIndex(k)
-			);
-			$newModals.append($newItemModal);
-		}
-		console.log($newModals);
-		$("#rose-gardens-page").append($newModals);
+		$("#beanies-page").append($newModals);
 	}
 	createMenuItem(menuItem) {
 		const $newItem = $(
@@ -839,14 +802,15 @@ rh.BeaniesPageController = class {
 		$newItem.click((event) => {
 			console.log("You have clicked ", menuItem.name);
 			$(`#${menuItem.name}`).modal('show');
+			console.log($(`#${menuItem.name}`).modal('show'));
 		})
 		// $(`#${menuItem.name}`).modal('hide');
 		return $newItem;
 
 	}
 	createItemModal(menuItem) {
-			const $newModal = $(
-					`<div class="modal" data-backdrop="true" id="${menuItem.name}" tabindex="-1" role="dialog" aria-labelledby="add photo"
+		const $newModal = $(
+			`<div class="modal" data-backdrop="true" id="${menuItem.name}" tabindex="-1" role="dialog" aria-labelledby="add photo"
 	aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
@@ -873,34 +837,36 @@ rh.BeaniesPageController = class {
 			<div class="modal-footer">
 				<button type="button" class="btn btn-outline-danger"
 					data-dismiss="modal">CANCEL</button>
-				<button type="button" id="addToOrder" class="btn btn-outline-danger"
+				<button type="button" name="${menuItem.id}" id="addToOrder" class="btn btn-outline-danger"
 					>ADD TO ORDER</button>
 			</div>
 		</div>
 	</div>
 </div>`
-					);
-					return $newModal;
-}
-addToOrder() {
-	console.log("ADDED BITCH!");
-}
+		);
+		return $newModal;
+	}
+	updateStudentInfo() {
+		rh.updateStudentInfo();
+	}
 }
 rh.MoenchCafePageController = class {
 	/** constructor */
 	constructor() {
 		rh.fbResturantManager.beginListening("fav", this.updateFavView.bind(this));
-		rh.fbResturantManager.beginListening("special", this.updateSpecialView.bind(this));
 		// rh.fbRoseGardenManager.beginListening("item", this.updateView.bind(this));
 		rh.fbResturantManager.beginListening("fav", this.updateFavModals.bind(this));
-		rh.fbResturantManager.beginListening("special", this.updateSpecialModals.bind(this));
+		rh.fbUserManager.beginListening(rh.fbAuthManager.uid, this.updateStudentInfo.bind(this));
 		$("#shoppingCart").click((event) => {
 			console.log("clicked on cart");
 			window.location.href = "/shopping-cart.html";
 		});
-		$("#addToOrder").click((event) => {
-			console.log("clicked on cart");
-			window.location.href = "/shopping-cart.html";
+		$(document).on('click', '#addToOrder', function () {
+			// alert(`Added To Order!`);
+			$(this).html("ADDED TO ORDER");
+			// $("#addToOrder").html("ADDED TO ORDER");
+			console.log($(this).attr("name"));
+			rh.addToOrder(rh.fbAuthManager.uid, $(this).attr("name"), rh.COLLECTION_MOENCH_CAFE);
 		});
 	}
 	updateFavView() {
@@ -913,7 +879,6 @@ rh.MoenchCafePageController = class {
 			);
 			$newMenu.append($newItem);
 		}
-		console.log($newMenu);
 		$("#fav-menu").append($newMenu);
 	}
 	// updateView() {
@@ -928,17 +893,6 @@ rh.MoenchCafePageController = class {
 	// 	console.log($newMenu);
 	// 	$("#fav").append($newMenu);
 	// }
-	updateSpecialView() {
-		$("#special").removeAttr("id").hide();
-		let $newMenu = $("<div></div>").attr("id", "special").addClass("row");
-		for (let k = 0; k < rh.fbResturantManager.length; k++) {
-			const $newItem = this.createMenuItem(
-				rh.fbResturantManager.getMenuItemAtIndex(k)
-			);
-			$newMenu.append($newItem);
-		}
-		$("#special-menu").append($newMenu);
-	}
 	updateFavModals() {
 		let $newModals = $("<div></div>").attr("id", "rose-gardens-modal").addClass("container");
 		for (let k = 0; k < rh.fbResturantManager.length; k++) {
@@ -947,19 +901,7 @@ rh.MoenchCafePageController = class {
 			);
 			$newModals.append($newItemModal);
 		}
-		console.log($newModals);
-		$("#rose-gardens-page").append($newModals);
-	}
-	updateSpecialModals() {
-		let $newModals = $("<div></div>").attr("id", "rose-gardens-modal").addClass("container");
-		for (let k = 0; k < rh.fbResturantManager.length; k++) {
-			const $newItemModal = this.createItemModal(
-				rh.fbResturantManager.getMenuItemAtIndex(k)
-			);
-			$newModals.append($newItemModal);
-		}
-		console.log($newModals);
-		$("#rose-gardens-page").append($newModals);
+		$("#moench-cafe-page").append($newModals);
 	}
 	createMenuItem(menuItem) {
 		const $newItem = $(
@@ -978,8 +920,8 @@ rh.MoenchCafePageController = class {
 
 	}
 	createItemModal(menuItem) {
-			const $newModal = $(
-					`<div class="modal" data-backdrop="true" id="${menuItem.name}" tabindex="-1" role="dialog" aria-labelledby="add photo"
+		const $newModal = $(
+			`<div class="modal" data-backdrop="true" id="${menuItem.name}" tabindex="-1" role="dialog" aria-labelledby="add photo"
 	aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
@@ -1006,18 +948,129 @@ rh.MoenchCafePageController = class {
 			<div class="modal-footer">
 				<button type="button" class="btn btn-outline-danger"
 					data-dismiss="modal">CANCEL</button>
-				<button type="button" id="addToOrder" class="btn btn-outline-danger"
+				<button type="button" name="${menuItem.id}" id="addToOrder" class="btn btn-outline-danger"
 					>ADD TO ORDER</button>
 			</div>
 		</div>
 	</div>
 </div>`
-					);
-					return $newModal;
+		);
+		return $newModal;
+	}
+	updateStudentInfo() {
+		rh.updateStudentInfo();
+	}
 }
-addToOrder() {
-	console.log("ADDED BITCH!");
+rh.FbShoppingCartManager = class {
+	constructor(uid, menu) {
+		this._collectionRef = firebase.firestore().collection("Shopping Cart");
+		this._documentSnapshots = [];
+		this._unsubscribe = null;
+		this._uid = uid
+	}
+
+	beginListening(changeListener) {
+		console.log("Listening for order items");
+		let query = this._collectionRef.orderBy(rh.KEY_LAST_TOUCHED, "desc").limit(3);
+		if (this._uid) {
+			console.log(this._uid);
+			query = query.where('user', "==", this._uid);
+		}
+		this._unsubscribe = query.onSnapshot((querySnapshot) => {
+			this._documentSnapshots = querySnapshot.docs;
+			console.log("Update " + this._documentSnapshots.length + " order items");
+			if (changeListener) {
+				changeListener();
+			}
+		})
+	}
+
+	stopListening() {
+		this._unsubscribe();
+	}
+	get length() {
+		return this._documentSnapshots.length;
+	}
+	getMenuItemAtIndex(index) {
+		return new rh.Order(
+			this._documentSnapshots[index]._document.proto.fields.user.stringValue,
+			this._documentSnapshots[index]._document.proto.fields.itemName.stringValue,
+			this._documentSnapshots[index]._document.proto.fields.menu.stringValue,
+			this._documentSnapshots[index]._document.proto.fields.imageUrl.stringValue,
+
+		)
+	}
 }
+rh.ShoppingCartPageController = class {
+	constructor() {
+		rh.fbShoppingCartManager.beginListening(this.updateView.bind(this));
+		rh.fbUserManager.beginListening(rh.fbAuthManager.uid, this.updateStudentInfo.bind(this));
+	}
+	updateView() {
+		$("#item-list").removeAttr("id").hide();
+		let $newOrder = $("<div></div>").attr("id", "orders").addClass("row");
+		for (let k = 0; k < rh.fbShoppingCartManager.length; k++) {
+			const $newItem = this.createItem(
+				rh.fbShoppingCartManager.getMenuItemAtIndex(k)
+			);
+			$newOrder.append($newItem);
+		}
+		$("#order-list").append($newOrder);
+	}
+	createItem(menuItem) {
+		const $newItem = $(`
+		<div id="item-list" name="${menuItem.id}"class="row">
+		    <div class="modal-icon col">
+		        <img src=${menuItem.imageUrl} alt="${menuItem.item}">
+		     </div>
+		    <div id="item-info" class="col">
+		        <h6>${menuItem.item}</h6>
+		        <p>${menuItem.menu}</p>
+			</div>
+		</div>
+		
+		`);
+		return $newItem;
+	}
+	updateStudentInfo() {
+		rh.updateStudentInfo();
+	}
+}
+
+rh.updateStudentInfo = function () {
+	const $studentInfo = (`
+	<img id="drawer-img" class="navbar-brand" src="/images/profile_sally.png" alt="profile pic">
+	<a id="drawer-text" class="navbar-brand">${rh.fbUserManager.name}</a>
+	<a id="drawer-text" class="navbar-brand">${rh.fbAuthManager.uid}@rose-hulman.edu</a>
+	`);
+	$("#studentinfo").append($studentInfo);
+}
+
+rh.addToOrder = function (userId, itemId, menu) {
+	// console.log(menuItem);
+	console.log(`Add thy daily bread`);
+	this._collectionRef = firebase.firestore().collection(menu);
+	docRef = this._collectionRef.doc(itemId);
+	docRef.get().then(function (doc) {
+		if (doc.exists) {
+			// rh.ShoppingCartPageController.addItemToOrder(doc, menu, userId);
+			firebase.firestore().collection("Shopping Cart").add({
+				[rh.KEY_USER]: userId,
+				[rh.KEY_ITEM_NAME]: doc.data().name,
+				[rh.KEY_ITEM_IMAGE_URL]: doc.data().imageUrl,
+				[rh.KEY_MENU]: menu,
+				[rh.KEY_LAST_TOUCHED]: firebase.firestore.Timestamp.now(),
+			}).then((docRef) => {
+				console.log("Document has been added with id", docRef.id);
+			}).catch((error) => {
+				console.log("There was an error adding the document", error);
+			});
+		} else {
+			console.log("No doc exists");
+		}
+	}).catch(function (error) {
+		console.log("Error occurred : ", error);
+	});
 }
 
 rh.checkForRedirects = function () {
@@ -1044,23 +1097,27 @@ rh.initializePage = function () {
 		new rh.ChaunceysPageController();
 	} else if ($("#union-cafe-page").length) {
 		console.log("On Union Cafe page");
-		// rh.fbResturantManager = new rh.FbResturantManager(rh.fbAuthManager.uid, rh.COLLECTION_ROSE_GARDEN);
-		// new rh.UnionCafePageController();
+		rh.fbResturantManager = new rh.FbResturantManager(rh.fbAuthManager.uid, rh.COLLECTION_UNION_CAFE);
+		new rh.UnionCafePageController();
 	} else if ($("#rose-gardens-page").length) {
 		console.log("On Rose Gardens page");
 		rh.fbResturantManager = new rh.FbResturantManager(rh.fbAuthManager.uid, rh.COLLECTION_ROSE_GARDEN);
 		new rh.RoseGardenPageController();
 	} else if ($("#moench-cafe-page").length) {
 		console.log("On Moench Cafe page");
-		// rh.fbResturantManager = new rh.FbResturantManager(rh.fbAuthManager.uid, rh.COLLECTION_ROSE_GARDEN);
-		// new rh.MoenchCafePageController();
+		rh.fbResturantManager = new rh.FbResturantManager(rh.fbAuthManager.uid, rh.COLLECTION_MOENCH_CAFE);
+		new rh.MoenchCafePageController();
 	} else if ($("#beanies-page").length) {
 		console.log("On Beanies page");
-		// rh.fbResturantManager = new rh.FbResturantManager(rh.fbAuthManager.uid, rh.COLLECTION_ROSE_GARDEN);
-		// new rh.BeaniesPageController();
+		rh.fbResturantManager = new rh.FbResturantManager(rh.fbAuthManager.uid, rh.COLLECTION_BEANIES);
+		new rh.BeaniesPageController();
 	} else if ($("#settings-page").length) {
 		console.log("On Settings page");
 		new rh.SettingsPageController();
+	} else if ($("#shopping-cart-page").length) {
+		console.log("On the Shopping Cart");
+		rh.fbShoppingCartManager = new rh.FbShoppingCartManager(rh.fbAuthManager.uid, rh.COLLECTION_CART);
+		new rh.ShoppingCartPageController();
 	}
 
 }
