@@ -233,6 +233,7 @@ rh.LogInPageController = class {
 rh.MainPageController = class {
 	/** constructor */
 	constructor(userId) {
+		rh.fbUserManager.beginListening(rh.fbAuthManager.uid, this.updateStudentInfo.bind(this));
 		$("#union-cafe").click(function () {
 			console.log("You have clicked Union Cafe");
 			window.location.href = `/union-cafe.html`;
@@ -259,7 +260,9 @@ rh.MainPageController = class {
 			window.location.href = `/settings.html`;
 		});
 	}
-
+	updateStudentInfo() {
+		rh.updateStudentInfo();
+	}
 }
 rh.FbSettingsManager = class {
 	constructor(uid) {
